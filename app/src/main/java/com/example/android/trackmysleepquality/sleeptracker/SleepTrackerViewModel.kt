@@ -24,6 +24,7 @@ import android.view.animation.Transformation
 import androidx.core.view.VelocityTrackerCompat.clear
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.switchMap
@@ -59,6 +60,14 @@ class SleepTrackerViewModel(
 
         val nightsString = nights.map { nights ->
                 formatNights(nights, application.resources)
+        }
+
+        private val _navigateToSleepQuality = MutableLiveData<SleepNight?>()
+        val navigateToSleepQuality: MutableLiveData<SleepNight?>
+                get() = _navigateToSleepQuality
+
+        fun doneNavigating() {
+                _navigateToSleepQuality.value = null
         }
 
         init {
@@ -99,6 +108,7 @@ class SleepTrackerViewModel(
                         val oldNight = tonight.value ?: return@launch
                         oldNight.endTimeMilli = System.currentTimeMillis()
                         update(oldNight)
+                        _navigateToSleepQuality.value = oldNight
                 }
         }
 
