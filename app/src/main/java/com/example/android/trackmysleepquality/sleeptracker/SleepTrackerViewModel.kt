@@ -56,7 +56,7 @@ class SleepTrackerViewModel(
 
         private var tonight = MutableLiveData<SleepNight?>()
 
-        private val nights = database.getAllNights()
+        val nights = database.getAllNights()
 
         val nightsString = nights.map { nights ->
                 formatNights(nights, application.resources)
@@ -148,6 +148,18 @@ class SleepTrackerViewModel(
                 withContext(Dispatchers.IO){
                         database.clear()
                 }
+        }
+
+        private val _navigateToSleepDataQuality = MutableLiveData<Long?>()
+        val navigateToSleepDataQuality
+                get() = _navigateToSleepDataQuality
+
+        fun onSleepNightClicked(id: Long){
+                _navigateToSleepDataQuality.value = id
+        }
+
+        fun onSleepDataQualityNavigated() {
+                _navigateToSleepDataQuality.value = null
         }
 
 }
